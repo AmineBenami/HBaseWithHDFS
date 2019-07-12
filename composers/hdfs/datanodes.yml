@@ -1,0 +1,76 @@
+version: '3.1'
+
+services:
+  datanode-1:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: DN1
+    expose: ["50010", "50020", "50075"]
+    command: bash -c "bash ./LaunchDataNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=datanode1
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/
+    networks:
+      - hdfshadoop_network
+
+  datanode-2:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: DN2
+    expose: ["50010", "50020", "50075"]
+    command: bash -c "bash ./LaunchDataNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=datanode2
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/
+    networks:
+      - hdfshadoop_network
+
+  datanode-3:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: DN3
+    expose: ["50010", "50020", "50075"]
+    command: bash -c "bash ./LaunchDataNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=datanode3
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/
+    networks:
+      - hdfshadoop_network
+
+  datanode-4:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: DN4
+    expose: ["50010", "50020", "50075"]
+    command: bash -c "bash ./LaunchDataNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=datanode4
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/
+    networks:
+      - hdfshadoop_network
+
+volumes:
+  hdfs_data:
+    external:
+      name: hdfs_data
+
+networks:
+  hdfshadoop_network:
+    external:
+      name: hdfshadoop_network

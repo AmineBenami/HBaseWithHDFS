@@ -1,0 +1,82 @@
+version: '3.1'
+
+services:
+
+  hmaster-1:
+    container_name: hm1
+    image: foodytechnologies/hbase-openjdk8-alpine
+    expose: ["16000", "16010"]
+    command: bash -c "bash ./LaunchHMaster.sh"
+    environment:
+      - HMASTER_HOSTS=hmaster-1:16000,hmaster-2:16000
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+      - ../env/env_hmaster_master.sh
+    networks:
+      - hdfshadoop_network
+
+  hmaster-2:
+    container_name: hm2
+    image: foodytechnologies/hbase-openjdk8-alpine
+    expose: ["16000", "16010"]
+    depends_on: ["hmaster-1"]
+    command: bash -c "bash ./LaunchHMaster.sh"
+    environment:
+      - HMASTER_HOSTS=hmaster-1:16000,hmaster-2:16000
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    networks:
+      - hdfshadoop_network
+
+
+  regionserver-1:
+    image: foodytechnologies/hbase-openjdk8-alpine
+    container_name: rs1
+    depends_on: ["hmaster-1"]
+    expose: ["16020", "16030"]
+    command: bash -c "bash ./LaunchRegionServer.sh"
+    environment:
+      - HMASTER_HOSTS=hmaster-1:16000,hmaster-2:16000
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    networks:
+      - hdfshadoop_network
+
+
+  regionserver-2:
+    image: foodytechnologies/hbase-openjdk8-alpine
+    container_name: rs2
+    depends_on: ["hmaster-1"]
+    expose: ["16020", "16030"]
+    command: bash -c "bash ./LaunchRegionServer.sh"
+    environment:
+      - HMASTER_HOSTS=hmaster-1:16000,hmaster-2:16000
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    networks:
+      - hdfshadoop_network
+
+
+
+  regionserver-3:
+    image: foodytechnologies/hbase-openjdk8-alpine
+    container_name: rs3
+    depends_on: ["hmaster-1"]
+    expose: ["16020", "16030"]
+    command: bash -c "bash ./LaunchRegionServer.sh"
+    environment:
+      - HMASTER_HOSTS=hmaster-1:16000,hmaster-2:16000
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    networks:
+      - hdfshadoop_network
+
+networks:
+  hdfshadoop_network:
+    external:
+      name: hdfshadoop_network

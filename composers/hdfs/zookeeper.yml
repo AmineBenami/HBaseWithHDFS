@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  vnet.hadoop.zookeeper.1:
+    image: 31z4/zookeeper
+    restart: always
+    container_name: zoo1
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=vnet.hadoop.zookeeper.2:2888:3888 server.3=vnet.hadoop.zookeeper.3:2888:3888
+    networks:
+      - hdfshadoop_network
+
+  vnet.hadoop.zookeeper.2:
+    image: 31z4/zookeeper
+    restart: always
+    container_name: zoo2
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=vnet.hadoop.zookeeper.1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=vnet.hadoop.zookeeper.3:2888:3888
+    networks:
+      - hdfshadoop_network
+
+  vnet.hadoop.zookeeper.3:
+    image: 31z4/zookeeper
+    restart: always
+    container_name: zoo3
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=vnet.hadoop.zookeeper.1:2888:3888 server.2=vnet.hadoop.zookeeper.2:2888:3888 server.3=0.0.0.0:2888:3888
+    networks:
+      - hdfshadoop_network
+
+networks:
+  hdfshadoop_network:
+    external:
+      name: hdfshadoop_network
+

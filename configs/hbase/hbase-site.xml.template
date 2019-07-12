@@ -1,0 +1,23 @@
+<configuration>
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    
+    <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://CLUSTER_NAME/hbase/</value>
+    </property>
+    <property>
+	    <name>hbase.zookeeper.property.clientPort</name>
+	    <value>ZOOK_PORT</value>
+   </property>
+   <property>
+       <name>hbase.zookeeper.quorum</name>
+       <value>ZOOK_HOSTS</value>
+    </property>    
+    <property>
+       <name>hbase.unsafe.stream.capability.enforce</name>
+       <value>false</value>
+    </property>
+</configuration>

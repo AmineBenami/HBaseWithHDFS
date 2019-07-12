@@ -1,0 +1,34 @@
+FROM foodytechnologies/hdfs-openjdk8-alpine
+MAINTAINER Amine Ben Belgacem <amin.benbelkacem@gmail.com>
+#ENV LANG C.UTF-8
+ENV HBASE_VERSION 2.2.0
+ENV HBASE_HOME /home/guest/hbase
+ENV HBASE_CONF_DIR   ${HBASE_HOME}/conf
+#ENV JAVA_HOME  /usr/lib/jvm/default-jvm
+ENV PATH       $PATH:${HBASE_HOME}/sbin:${HBASE_HOME}/bin
+#ENV HBASE_LOG_DIR    /var/log/hbase
+#ENV HBASE_TMP_DIR    /hbase
+#RUN pwd
+#RUN sudo apk update
+#RUN sudo apk add --no-cache shadow bash zip curl openssh openrc sudo openjdk8
+# asciidoctor solves 'NotImplementedError: fstat unimplemented unsupported or native support failed to load'
+#RUN rc-update add sshd
+ENV HOME /home/guest
+#RUN mkdir -p $HOME
+#RUN usermod -d $HOME guest
+#RUN usermod -p "*" guest
+#RUN usermod --shell /bin/bash guest
+#ENV PATH $PATH:$HBASE_HOME/sbin:$HBASE_HOME/bin
+RUN wget -Y on --no-check-certificate  http://mirrors.ukfast.co.uk/sites/ftp.apache.org/hbase/${HBASE_VERSION}/hbase-${HBASE_VERSION}-bin.tar.gz
+RUN tar xzf hbase-${HBASE_VERSION}-bin.tar.gz
+RUN mv hbase-${HBASE_VERSION} $HBASE_HOME
+RUN rm hbase-${HBASE_VERSION}-bin.tar.gz
+COPY configs/hbase/* $HBASE_HOME/conf/
+COPY launchers/Utils.sh launchers/hbase/* $HOME/
+RUN sudo chown -R guest:users $HOME
+#RUN groups guest
+#WORKDIR $HOME
+#USER guest
+#ENV JAVA_HOME   /usr/lib/jvm/default-jvm
+#ENV PATH        $PATH:${JAVA_HOME}/bin
+ENTRYPOINT ["/home/guest/docker-entrypoint-hbase.sh"]

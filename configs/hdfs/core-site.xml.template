@@ -1,0 +1,10 @@
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://CLUSTER_NAME</value>
+    </property>
+    <property>
+        <name>ha.zookeeper.quorum.CLUSTER_NAME</name>
+        <value>ZOOK_SERVERS</value>
+    </property>
+</configuration>

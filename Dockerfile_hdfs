@@ -1,0 +1,62 @@
+#not alpine:latest because latest version of java (> 8.191) is not compatible with hadoop 3.2
+FROM alpine:3.5
+MAINTAINER Amine Ben Belgacem <amin.benbelkacem@gmail.com>
+ENV LANG C.UTF-8
+ENV HADOOP_HOME /home/guest/hadoop
+ENV HADOOP_VERSION 3.2.0
+RUN apk update
+RUN apk add --no-cache shadow bash zip curl openssh openrc sudo openjdk8
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    apk update && \
+    apk add jruby && \
+    apk add jruby-irb && \
+    apk add asciidoctor
+RUN rc-update add sshd
+ENV HOME /home/guest
+RUN mkdir -p $HOME
+RUN usermod -d $HOME guest
+RUN usermod -p "*" guest
+RUN usermod --shell /bin/bash guest
+
+#ENV JOURNALDIR $HOME/journal/
+ENV HADOOP_COMMON_HOME $HADOOP_HOME
+ENV HADOOP_HDFS_HOME $HADOOP_HOME
+ENV HADOOP_OPTS "-Djava.library.path=$HADOOP_HOME/lib/native"
+ENV HADOOP_COMMON_LIB_NATIVE_DIR $HADOOP_HOME/lib/native
+ENV PATH $PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+RUN groups guest
+RUN chown guest:users $HOME
+#RUN chown -R guest:users $HDFSDIR/..
+RUN mkdir $HOME/.ssh \
+        && chmod 0700 $HOME/.ssh \
+        && ssh-keygen -A \
+        && sed -i s/^#PasswordAuthentication\ yes/PasswordAuthentication\ no/ /etc/ssh/sshd_config \
+        && sed -i s/^#PermitRootLogin\ prohibit-password/PermitRootLogin\ no/ /etc/ssh/sshd_config \
+        && sed -i s/^#PermitEmptyPasswords\ no/PermitEmptyPasswords\ yes/ /etc/ssh/sshd_config \
+        && sed -i s/^#LogLevel\ INFO/LogLevel\ INFO/ /etc/ssh/sshd_config \
+        #   StrictHostKeyChecking ask
+        && echo "AllowUsers guest" >> /etc/ssh/sshd_config \
+        && echo "AuthorizedKeysFile  $HOME/.ssh/authorized_keys" >> /etc/ssh/sshd_config \
+        && echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config \
+        && echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config \
+        && sed -e 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' -i /etc/sudoers \
+        && sed -e 's/^wheel:\(.*\)/wheel:\1,guest/g' -i /etc/group \
+        && sed -i s/^#\ Host\ \\*/\Host\ \*/ /etc/ssh/ssh_config \
+        && sed -i s/^#\ \ \ StrictHostKeyChecking\ ask/\ \ StrictHostKeyChecking\ no/ /etc/ssh/ssh_config
+COPY sshkeys/* $HOME/.ssh/
+RUN chown -R guest:users $HOME/.ssh
+EXPOSE 22
+WORKDIR $HOME
+USER guest
+ENV JAVA_HOME   /usr/lib/jvm/default-jvm
+ENV PATH        $PATH:${JAVA_HOME}/bin
+RUN wget -Y on --no-check-certificate  http://mirrors.ukfast.co.uk/sites/ftp.apache.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz
+RUN tar xzf hadoop-${HADOOP_VERSION}.tar.gz
+RUN mv hadoop-${HADOOP_VERSION} $HADOOP_HOME
+RUN rm hadoop-${HADOOP_VERSION}.tar.gz
+COPY configs/hdfs/* $HADOOP_HOME/etc/hadoop/
+COPY launchers/Utils.sh launchers/hdfs/* $HOME/
+COPY config_home/bashrc .bashrc
+COPY lib/* $HADOOP_HOME/lib/native/
+#RUN mkdir -p $JOURNALDIR
+ENTRYPOINT ["/home/guest/docker-entrypoint-hdfs.sh"]

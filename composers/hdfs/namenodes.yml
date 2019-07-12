@@ -1,0 +1,77 @@
+version: '3.1'
+
+services:
+  namenode1:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: NN1
+    expose: ["9000","50070","53310"]
+    command: bash -c "bash ./LaunchNameNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+      - ../env/env_namenode_master.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=namenode1
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/:rw
+    networks:
+      - hdfshadoop_network
+
+  namenode2:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: NN2
+    expose: ["9000","50070","53310"]
+    command: bash -c "bash ./LaunchNameNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=namenode2
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/:rw
+    networks:
+      - hdfshadoop_network
+
+  namenode3:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: NN3
+    expose: ["9000","50070","53310"]
+    command: bash -c "bash ./LaunchNameNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=namenode3
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/:rw
+    networks:
+      - hdfshadoop_network
+
+  namenode4:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: NN4
+    expose: ["9000","50070","53310"]
+    command: bash -c "bash ./LaunchNameNode.sh"
+    env_file:
+      - ../env/env.sh
+      - ../env/env_hdfs.sh
+    environment:
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=namenode4
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/:rw
+    networks:
+      - hdfshadoop_network
+
+volumes:
+  hdfs_data:
+    external:
+      name: hdfs_data
+
+networks:
+  hdfshadoop_network:
+    external:
+      name: hdfshadoop_network

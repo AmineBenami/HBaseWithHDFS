@@ -1,0 +1,63 @@
+version: '3.1'
+
+services:
+  journal1:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: JN1
+    hostname: JN1
+    expose: ["8485"]
+    command: bash /home/guest/LaunchJournalNode.sh
+    environment:
+      - JOURNALS=journal1:8485;journal2:8485;journal3:8485
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=journal1
+    env_file:
+      - ../env/env.sh
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/:rw
+    networks:
+      - hdfshadoop_network
+
+  journal2:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: JN2
+    hostname: JN2
+    expose: ["8485"]
+    command: bash /home/guest/LaunchJournalNode.sh
+    environment:
+      - JOURNALS=journal1:8485;journal2:8485;journal3:8485
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=journal2
+    env_file:
+      - ../env/env.sh
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/:rw
+    networks:
+      - hdfshadoop_network
+
+  journal3:
+    image: foodytechnologies/hdfs-openjdk8-alpine
+    container_name: JN3
+    hostname: JN3
+    expose: ["8485"]
+    command: bash /home/guest/LaunchJournalNode.sh
+    environment:
+      - JOURNALS=journal1:8485;journal2:8485;journal3:8485
+      - HDFSDIR=/mnt/hadoop/dfs
+      - MY_ID=journal3
+    env_file:
+      - ../env/env.sh
+    volumes:
+      - hdfs_data:/mnt/hadoop/dfs/:rw
+    networks:
+      - hdfshadoop_network
+
+volumes:
+  hdfs_data:
+    external:
+      name: hdfs_data
+
+networks:
+  hdfshadoop_network:
+    external:
+      name: hdfshadoop_network
