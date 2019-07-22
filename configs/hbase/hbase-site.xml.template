@@ -20,4 +20,16 @@
        <name>hbase.unsafe.stream.capability.enforce</name>
        <value>false</value>
     </property>
+    <property>
+       <name>hbase.regionserver.ipc.address</name>
+       <value>0.0.0.0</value>
+    </property>
+    <property>
+       <name>hbase.master.ipc.address</name>
+       <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>hbase.regionserver.hostname.disable.master.reversedns</name>
+        <value>true</value>
+    </property>
 </configuration>

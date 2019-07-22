@@ -15,6 +15,10 @@ services:
       - ../env/env_hmaster_master.sh
     networks:
       - hdfshadoop_network
+    networks:
+      hdfshadoop_network:
+        aliases:
+          - hm1
 
   hmaster-2:
     container_name: hm2
@@ -28,8 +32,9 @@ services:
       - ../env/env.sh
       - ../env/env_hdfs.sh
     networks:
-      - hdfshadoop_network
-
+      hdfshadoop_network:
+        aliases:
+          - hm2
 
   regionserver-1:
     image: foodytechnologies/hbase-openjdk8-alpine
@@ -43,7 +48,9 @@ services:
       - ../env/env.sh
       - ../env/env_hdfs.sh
     networks:
-      - hdfshadoop_network
+      hdfshadoop_network:
+        aliases:
+          - rs1
 
 
   regionserver-2:
@@ -58,8 +65,9 @@ services:
       - ../env/env.sh
       - ../env/env_hdfs.sh
     networks:
-      - hdfshadoop_network
-
+      hdfshadoop_network:
+        aliases:
+          - rs2
 
 
   regionserver-3:
@@ -74,7 +82,9 @@ services:
       - ../env/env.sh
       - ../env/env_hdfs.sh
     networks:
-      - hdfshadoop_network
+      hdfshadoop_network:
+        aliases:
+          - rs3
 
 networks:
   hdfshadoop_network:

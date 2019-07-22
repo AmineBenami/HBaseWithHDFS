@@ -5,7 +5,7 @@ ENV LANG C.UTF-8
 ENV HADOOP_HOME /home/guest/hadoop
 ENV HADOOP_VERSION 3.2.0
 RUN apk update
-RUN apk add --no-cache shadow bash zip curl openssh openrc sudo openjdk8
+RUN apk add --no-cache shadow snappy bash zip curl openssh openrc sudo openjdk8
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     apk update && \
     apk add jruby && \
@@ -24,6 +24,7 @@ ENV HADOOP_HDFS_HOME $HADOOP_HOME
 ENV HADOOP_OPTS "-Djava.library.path=$HADOOP_HOME/lib/native"
 ENV HADOOP_COMMON_LIB_NATIVE_DIR $HADOOP_HOME/lib/native
 ENV PATH $PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/lib/
 RUN groups guest
 RUN chown guest:users $HOME
 #RUN chown -R guest:users $HDFSDIR/..
