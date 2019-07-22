@@ -1,5 +1,11 @@
 # HdfsHadoop
 Setup fully distributed Hbase cluster
+## Build Images:
+### 1/ Hdfs:<br/>
+`docker build -f Dockerfile_hdfs -t  foodytechnologies/hdfs-openjdk8-alpine .`<br/>
+### 2/ Hbase:<br/>
+`docker build -f Dockerfile_hbase -t  foodytechnologies/hbase-openjdk8-alpine .`<br/>
+
 ## prerequisites:
 + Create a new network :<br/>
 `docker network create -d bridge hdfshadoop_network`<br/>
@@ -7,7 +13,7 @@ Setup fully distributed Hbase cluster
 `docker volume create hdfs_data`<br/>
 + Launch zookeeper servers: they will be used for Hdfs and Hbase components<br/>
 ` docker-compose -f composers/hdfs/zookeeper.yml up -d`
-### Launch Hdfs and Hbase:
+## Launch Hdfs and Hbase:
 **1. We have to launch Hdfs components in the order**<br/>
 + Launch journal nodes:<br/>
 `docker-compose -f composers/hdfs/journalnode.yml up -d` <br/>
